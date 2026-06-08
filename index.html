@@ -6,123 +6,337 @@
     <title>Contoured Cat QR Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f5f7;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            padding: 20px;
         }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            width: 800px;
-            box-sizing: border-box;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
         }
-        h2 { text-align: center; color: #1f2937; margin-top: 0; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #4b5563;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 15px;
+            letter-spacing: 0.5px;
         }
+
         input[type="text"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 15px;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: #f7fafc;
         }
+
         input[type="text"]:focus {
-            border-color: #2563eb;
+            border-color: #667eea;
             outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+
+        .preview-section {
+            margin: 35px 0;
+        }
+
+        .preview-label {
+            text-align: center;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
         .preview-area {
             text-align: center;
-            margin-top: 25px;
-            background: #fafafa;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px dashed #d1d5db;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
         }
+
+        .preview-area:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+        }
+
         canvas {
             max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
         .download-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 15px;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-        .download-btn:hover { background: #1d4ed8; }
-        .download-btn:active { background: #1e40af; }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .clear-btn {
+            flex: 1;
+            padding: 14px;
+            background: #e2e8f0;
+            color: #2d3748;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .clear-btn:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
         .status-message {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
-            color: #666;
+            font-weight: 600;
+            color: #667eea;
             min-height: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .copyright {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #b45309;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Cat QR Generator</h2>
-    
-    <div class="form-group">
-        <label for="qr-text">Enter URL or Text</label>
-        <input type="text" id="qr-text" value="https://google.com">
+<div class="main-wrapper">
+    <div class="header">
+        <h1>🐱 Cat QR Generator</h1>
+        <p>Create stunning QR codes with custom cat silhouettes</p>
     </div>
 
-    <div class="preview-area">
-        <canvas id="qr-canvas"></canvas>
+    <div class="container">
+        <h2>Generate Your QR Code</h2>
+
+        <div class="info-box">
+            <strong>📌 Pro Tip:</strong>
+            Place your cat1.png image in the <code>images/</code> folder for best results!
+        </div>
+        
+        <div class="form-group">
+            <label for="qr-text">📝 Enter URL or Text</label>
+            <input type="text" id="qr-text" value="https://google.com" placeholder="Enter text or URL...">
+        </div>
+
+        <div class="preview-section">
+            <div class="preview-label">✨ QR Code Preview</div>
+            <div class="preview-area">
+                <canvas id="qr-canvas"></canvas>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="download-btn" id="download-btn">⬇️ Download QR Code</button>
+            <button class="clear-btn" id="clear-btn">🔄 Clear</button>
+        </div>
+
+        <div class="status-message" id="status-message"></div>
     </div>
 
-    <button class="download-btn" id="download-btn">Export QR Code</button>
-    <div class="status-message" id="status-message"></div>
+    <div class="footer">
+        <div class="copyright">
+            © 2026 <strong>izioussama</strong> - Cat QR Generator | All Rights Reserved
+        </div>
+    </div>
 </div>
 
 <script>
     const qrTextInput = document.getElementById('qr-text');
     const canvas = document.getElementById('qr-canvas');
     const downloadBtn = document.getElementById('download-btn');
+    const clearBtn = document.getElementById('clear-btn');
     const statusMessage = document.getElementById('status-message');
     let isGenerating = false;
 
-    // Automatically load the embedded asset from the root directory
+    // Automatically load the embedded asset from the images directory
     const catImage = new Image();
-    catImage.src = 'cat1.png'; 
+    catImage.src = 'images/cat1.png'; 
 
     // Re-render once the image asset finishes loading over the network/disk
     catImage.onload = function() {
         generateQR();
     };
 
+    catImage.onerror = function() {
+        statusMessage.textContent = '⚠️ Cat image not found in images/ folder';
+        statusMessage.style.color = '#e53e3e';
+    };
+
     function generateQR() {
         if (isGenerating) return;
         isGenerating = true;
-        statusMessage.textContent = 'Generating...';
+        statusMessage.textContent = '⏳ Generating...';
+        statusMessage.style.color = '#667eea';
 
         const text = qrTextInput.value.trim() || " ";
         
@@ -139,17 +353,18 @@
 
         QRCode.toCanvas(canvas, text, options, function (error) {
             isGenerating = false;
-            statusMessage.textContent = '';
 
             if (error) {
                 console.error(error);
-                statusMessage.textContent = 'Error generating QR code';
+                statusMessage.textContent = '❌ Error generating QR code';
+                statusMessage.style.color = '#e53e3e';
                 return;
             }
 
             // Fallback safety if image isn't available
             if (!catImage.complete || catImage.naturalWidth === 0) {
-                statusMessage.textContent = 'Cat image not loaded yet';
+                statusMessage.textContent = '⏳ Cat image loading...';
+                statusMessage.style.color = '#667eea';
                 return;
             }
 
@@ -191,7 +406,8 @@
 
             // Draw your original cat silhouette exactly inside the freshly cleared custom boundary
             ctx.drawImage(catImage, x, y, overlayWidth, overlayHeight);
-            statusMessage.textContent = 'Ready to download!';
+            statusMessage.textContent = '✅ Ready to download!';
+            statusMessage.style.color = '#48bb78';
         });
     }
 
@@ -204,7 +420,8 @@
         
         // Check if canvas has content
         if (canvas.width === 0 || canvas.height === 0) {
-            statusMessage.textContent = 'Please wait for QR code to generate';
+            statusMessage.textContent = '⏳ Please wait for QR code to generate';
+            statusMessage.style.color = '#ed8936';
             return;
         }
 
@@ -215,12 +432,23 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            statusMessage.textContent = 'Downloaded!';
-            setTimeout(() => { statusMessage.textContent = 'Ready to download!'; }, 2000);
+            statusMessage.textContent = '✅ Downloaded successfully!';
+            statusMessage.style.color = '#48bb78';
+            setTimeout(() => { 
+                statusMessage.textContent = '✅ Ready to download!';
+            }, 2000);
         } catch (error) {
             console.error('Download error:', error);
-            statusMessage.textContent = 'Error downloading QR code';
+            statusMessage.textContent = '❌ Error downloading QR code';
+            statusMessage.style.color = '#e53e3e';
         }
+    });
+
+    // Clear button functionality
+    clearBtn.addEventListener('click', function() {
+        qrTextInput.value = 'https://google.com';
+        statusMessage.textContent = '';
+        generateQR();
     });
 
     // Generate initial QR code on page load
